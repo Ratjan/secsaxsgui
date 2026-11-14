@@ -1,0 +1,16 @@
+# Whitelist: only the SEC-SAXS GUI and the example scan 62750 are tracked.
+/*
+!/.gitignore
+!/sec_saxs_gui.py
+!/functions.py
+!/requirements.txt
+!/README.md
+!/LICENSE
+
+# Example data: only scan 62750
+!/rebinned_output/
+/rebinned_output/*
+!/rebinned_output/62750_rebinned/
+
+__pycache__/
+*.pyc
