@@ -224,11 +224,15 @@ class SECSAXSApp(tk.Tk):
         sc = ttk.Entry(box, textvariable=self.scale_var, width=9)
         sc.grid(row=0, column=1, padx=2)
         sc.bind("<Return>", lambda e: self._calculate())
+        ttk.Button(box, text="−", width=3,
+                   command=lambda: self._step_scale(-0.001)).grid(row=0, column=2, padx=1)
+        ttk.Button(box, text="+", width=3,
+                   command=lambda: self._step_scale(0.001)).grid(row=0, column=3, padx=1)
         self.show_raw = tk.BooleanVar(value=True)
         ttk.Checkbutton(box, text="Show buffer & sample curves", variable=self.show_raw,
-                        command=self._plot_scattering).grid(row=1, column=0, columnspan=2, sticky="w")
+                        command=self._plot_scattering).grid(row=1, column=0, columnspan=4, sticky="w")
         ttk.Button(box, text="Calculate scattering pattern",
-                   command=self._calculate).grid(row=2, column=0, columnspan=2, sticky="we", pady=(6, 0))
+                   command=self._calculate).grid(row=2, column=0, columnspan=4, sticky="we", pady=(6, 0))
 
         # --- save
         box = ttk.LabelFrame(panel, text="Save", padding=6)
@@ -445,6 +449,15 @@ class SECSAXSApp(tk.Tk):
         self.count_label.configure(text=", ".join(texts))
 
     # ---------------- scattering ----------------
+    def _step_scale(self, delta):
+        try:
+            value = float(self.scale_var.get())
+        except ValueError:
+            value = 1.0
+        self.scale_var.set(f"{round(value + delta, 6):g}")
+        if self.data is not None:
+            self._calculate()
+
     def _calculate(self):
         if self.data is None:
             messagebox.showinfo("No data", "Load data first.")
